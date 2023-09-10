@@ -4,6 +4,7 @@ const $all = document.querySelectorAll.bind(document);
 const btns = $all('.card-body button');
 const notis = $all('.container .noti span');
 const arrNum = [];
+const arrInteger = [];
 
 // Tính tổng số dương
 function tinhTongSoDuong(arr) {
@@ -87,6 +88,8 @@ function swapItemArr(arr, i, j) {
   return output;
 }
 
+// Sắp xếp tăng dần
+
 function sapXepTang(arr) {
   if (!checkEmptyArr(arr)) {
     return;
@@ -102,6 +105,64 @@ function sapXepTang(arr) {
     }
   }
   return { arr, arrSort };
+}
+
+//kiểm tra số nguyên tố
+function isPrime(num) {
+  if (num < 2) {
+    return false;
+  }
+  for (var i = 2; i <= Math.sqrt(num); i++) {
+    if (num % i == 0) {
+      return false;
+    }
+  }
+  return true;
+}
+//tìm số nguyên tố đầu tiên
+function findPrime(arr) {
+  if (!checkEmptyArr(arr)) {
+    return;
+  }
+
+  var prime = -1;
+  for (var item of arr) {
+    if (isPrime(item)) {
+      prime = item;
+      break;
+    }
+  }
+  return prime;
+}
+
+//cau 9
+function findInteger(arr) {
+  if (!checkEmptyArr(arr)) {
+    return;
+  }
+  const intArr = arr.filter((item) => Number.isInteger(item));
+  return intArr;
+}
+
+//cau 10
+function soSanhAmDuong(arr) {
+  if (!checkEmptyArr(arr)) {
+    return;
+  }
+  var sosanh = ['nhiều hơn', 'ít hơn', 'bằng'];
+  var listSoDuong = demSoDuong(arr);
+  var listSoAm = arr.filter((item) => item < 0);
+  return {
+    message: `Số dương ${
+      listSoDuong.length > listSoAm.length
+        ? sosanh[0]
+        : listSoDuong.length < listSoAm.length
+        ? sosanh[1]
+        : sosanh[2]
+    } số âm`,
+    listSoDuong,
+    listSoAm,
+  };
 }
 
 function checkEmptyArr(arr) {
@@ -191,6 +252,54 @@ function App() {
       renderResult(
         notis[7],
         `Mảng trước : ${result.arr} <br>👉 và sau khi đã sắp xếp : ${result.arrSort}`
+      );
+    }
+  };
+
+  //cau 8
+  btns[7].onclick = function () {
+    var result = findPrime(arrNum);
+
+    if (result == -1) {
+      renderResult(notis[8], `Không có số nguyên tố trong mảng`);
+    } else if (result || result == 0) {
+      renderResult(notis[8], `Số nguyên tố đầu tiên trong mảng : ${result}`);
+    }
+  };
+
+  //thêm số câu 9
+  btns[8].onclick = function addIntegerNum(e) {
+    e.preventDefault();
+
+    var input = $a('#txtIntegerNum');
+
+    arrInteger[arrInteger.length] = +input.value;
+    renderResult(notis[9], `[${arrInteger}]`);
+    input.value = '';
+  };
+
+  //Check Integer câu 9
+  btns[9].onclick = function () {
+    var result = findInteger(arrInteger);
+
+    if (result && result.length > 0) {
+      renderResult(
+        notis[10],
+        `Có ${result.length} số nguyên tố trong mảng lần lượt là : [${result}]`
+      );
+    } else {
+      renderResult(notis[10], `Không tìm thấy số nguyên tố`);
+    }
+  };
+
+  //câu 10
+  btns[10].onclick = function () {
+    var result = soSanhAmDuong(arrNum);
+
+    if (result) {
+      renderResult(
+        notis[11],
+        `${result.message}<br>👉 Có ${result.listSoDuong.length} số dương và ${result.listSoAm.length} số âm`
       );
     }
   };
